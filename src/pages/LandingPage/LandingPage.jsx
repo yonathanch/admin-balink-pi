@@ -50,7 +50,7 @@ const LandingPage = () => {
               </Link>
             </li>
             <li className="mx-8">
-              <Link to="#" className={styles.link}>
+              <Link to="/contact" className={styles.link}>
                 Contact
               </Link>
             </li>

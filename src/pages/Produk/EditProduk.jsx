@@ -9,8 +9,51 @@ import Button from "../../elements/Button/Button";
 import useApi from "../../api/useApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ModalSuksesLogo from "../../assets/images/ModalSuksesLogo.png";
+import ModalGagalLogo from "../../assets/images/ModalGagalLogo.png";
+import Modal from "react-modal";
 
 const EditProduk = () => {
+  const [modalSuksesIsOpen, setModalSuksesIsOpen] = useState(false);
+  const [modalGagalIsOpen, setModalGagalIsOpen] = useState(false);
+
+  const customStylesConfirmation = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      borderRadius: "8px",
+      padding: "60px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      zIndex: "9999",
+    },
+  };
+  const openModalSukses = () => {
+    setModalSuksesIsOpen(true);
+    setTimeout(() => {
+      closeModalSukses();
+      navigate("/produk");
+    }, 1500);
+  };
+
+  const closeModalSukses = () => {
+    setModalSuksesIsOpen(false);
+  };
+
+  const openModalGagal = () => {
+    setModalGagalIsOpen(true);
+    setTimeout(() => {
+      closeModalGagal();
+    }, 1500);
+  };
+
+  const closeModalGagal = () => {
+    setModalGagalIsOpen(false);
+  };
 
   const { response: produk, loading, error, get, put } = useApi();
   const [values, setValues] = useState({
@@ -52,8 +95,14 @@ const EditProduk = () => {
     put(
       `https://64328e2b3e05ff8b3728907e.mockapi.io/products/products/${id}`,
       values
-    );
-    navigate(-1);
+    )
+    .then(() => {
+      openModalSukses();
+    })
+    .catch((error) => {
+      openModalGagal();
+      console.error(error);
+    });
     setFile("");
   };
 
@@ -292,6 +341,65 @@ const EditProduk = () => {
       </div>
     </form>
       )}
+       <Modal
+        isOpen={modalSuksesIsOpen}
+        onRequestClose={closeModalSukses}
+        contentLabel="Success Modal"
+        style={customStylesConfirmation}
+        id="modalSukses"
+      >
+        <div
+          id="modalSuksesContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalSuksesContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalSuksesLogo"
+              src={ModalSuksesLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalSuksesTitle" className="title-large-semibold mb-16">
+              Berhasil Disimpan
+            </h4>
+            <p id="modalSuksesMessage" className="body-small-regular mb-16">
+              Data yang anda buat sudah berhasil disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalGagalIsOpen}
+        onRequestClose={closeModalGagal}
+        contentLabel="Fail Modal"
+        style={customStylesConfirmation}
+      >
+        <div
+          id="modalGagalContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalGagalContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalGagalLogo"
+              src={ModalGagalLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalGagalTitle" className="title-large-semibold mb-16">
+              Gagal Disimpan
+            </h4>
+            <p id="modalGagalText" className="body-small-regular mb-16">
+              Data yang anda buat Gagal disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
   </div>
   );
 };

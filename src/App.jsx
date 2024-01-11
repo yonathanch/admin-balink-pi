@@ -31,8 +31,11 @@ import Profil from "./pages/Profil/Profil";
 import EditProfil from "./pages/Profil/EditProfil";
 import { ModalAkunContextProvider } from "./context/ModalAkunContext";
 import { ModalContextProvider } from "./context/ModalContext";
+import Modal from "react-modal";
+import Contact from "./pages/LandingPage/Contact";
 
 function App() {
+  Modal.setAppElement("#root");
   return (
     <BrowserRouter>
       <ModalAkunContextProvider>
@@ -74,8 +77,8 @@ function App() {
               <Route path="/profile/edit" element={<EditProfil />} />
             </Route>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Login />} />
-            {/* <Route path="/" element={<LandingPage />} /> */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </ModalContextProvider>
       </ModalAkunContextProvider>

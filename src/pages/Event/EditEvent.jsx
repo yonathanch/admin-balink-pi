@@ -11,8 +11,54 @@ import Button from "../../elements/Button/Button";
 import { Switch } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import useApi from "../../api/useApi";
+import ModalSuksesLogo from "../../assets/images/ModalSuksesLogo.png";
+import ModalGagalLogo from "../../assets/images/ModalGagalLogo.png";
+import Modal from "react-modal";
+import tarikecak from "../../assets/images/tarikecak.jpg"
+import rectangle from "../../assets/images/Rectangle 333.png";
 
 const EditEvent = () => {
+  const [modalSuksesIsOpen, setModalSuksesIsOpen] = useState(false);
+  const [modalGagalIsOpen, setModalGagalIsOpen] = useState(false);
+
+  const customStylesConfirmation = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      borderRadius: "8px",
+      padding: "60px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      zIndex: "9999",
+    },
+  };
+  const openModalSukses = () => {
+    setModalSuksesIsOpen(true);
+    setTimeout(() => {
+      closeModalSukses();
+      navigate("/event");
+    }, 1500);
+  };
+
+  const closeModalSukses = () => {
+    setModalSuksesIsOpen(false);
+  };
+
+  const openModalGagal = () => {
+    setModalGagalIsOpen(true);
+    setTimeout(() => {
+      closeModalGagal();
+    }, 1500);
+  };
+
+  const closeModalGagal = () => {
+    setModalGagalIsOpen(false);
+  };
+
   const { response: event, loading, error, get, put } = useApi();
   const [toggle, setToggle] = useState(false);
 
@@ -59,13 +105,24 @@ const EditEvent = () => {
   }, [event]);
 
   const paragraphs = values.deskripsiEvent?.split("\n\n");
+  const infoEvent = {
+    imgInfo: rectangle,
+    titleInfo: "Tari Kecak Daerah Bali",
+    descInfo: "Tari kecak adalah saah satu tari khas bali yang menceritakan tentang bla bla bla bla...",
+  };
 
   const onSubmit = () => {
     put(
       `https://6481c62b29fa1c5c50320b9a.mockapi.io/balink/event/${id}`,
       values
-    );
-    navigate(-1);
+    )
+    .then(() => {
+      openModalSukses();
+    })
+    .catch((error) => {
+      openModalGagal();
+      console.error(error);
+    });
     setFile("");
   };
 
@@ -105,10 +162,15 @@ const EditEvent = () => {
                 {/* upload foto */}
                 <div className={styles.containerEvent}>
                   <div className={styles.imgArea}>
-                    <img
+                  <img
+                      id="uploadedImage"
+                      // src={file ? file : values.eventbali} 
+                      src={tarikecak}
+                    />
+                    {/* <img
                       id="uploadedImage"
                       src={file ? file : values.fotoEvent} 
-                    />
+                    /> */}
                   </div>
                   <div className="d-flex justify-content-center">
                     <label htmlFor={"fotoEvent"}>
@@ -179,6 +241,21 @@ const EditEvent = () => {
                   <div className="col-lg-6">
                     <img src={info} alt="info" />
                     <span className="body-medium-semibold"> Info Lengkap</span>
+                    <div className="d-grid col-12 mt-2">
+                      <div className={`${styles.layoutInfo}`}>
+                        <div>
+                          <img src={infoEvent.imgInfo} alt="" />
+                        </div>
+                        <div>
+                          <p className="body-medium-semibold">
+                            {infoEvent.titleInfo}
+                          </p>
+                          <p className="body-small-regular">
+                            {infoEvent.descInfo}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                     <div className="d-grid col-12 ">
                       <Button label="Ganti Artikel" color="brown" icon={edit} />
                     </div>
@@ -323,6 +400,65 @@ const EditEvent = () => {
           </div>
         </div>
       )}
+      <Modal
+        isOpen={modalSuksesIsOpen}
+        onRequestClose={closeModalSukses}
+        contentLabel="Success Modal"
+        style={customStylesConfirmation}
+        id="modalSukses"
+      >
+        <div
+          id="modalSuksesContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalSuksesContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalSuksesLogo"
+              src={ModalSuksesLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalSuksesTitle" className="title-large-semibold mb-16">
+              Berhasil Disimpan
+            </h4>
+            <p id="modalSuksesMessage" className="body-small-regular mb-16">
+              Data yang anda buat sudah berhasil disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalGagalIsOpen}
+        onRequestClose={closeModalGagal}
+        contentLabel="Fail Modal"
+        style={customStylesConfirmation}
+      >
+        <div
+          id="modalGagalContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalGagalContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalGagalLogo"
+              src={ModalGagalLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalGagalTitle" className="title-large-semibold mb-16">
+              Gagal Disimpan
+            </h4>
+            <p id="modalGagalText" className="body-small-regular mb-16">
+              Data yang anda buat Gagal disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

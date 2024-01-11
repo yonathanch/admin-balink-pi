@@ -7,8 +7,53 @@ import cancel from "../../assets/icons/cancel.svg";
 import save from "../../assets/icons/save.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import useApi from "../../api/useApi";
+import ModalSuksesLogo from "../../assets/images/ModalSuksesLogo.png";
+import ModalGagalLogo from "../../assets/images/ModalGagalLogo.png";
+import Modal from "react-modal";
 
 const EditPromo = () => {
+    const [modalSuksesIsOpen, setModalSuksesIsOpen] = useState(false);
+    const [modalGagalIsOpen, setModalGagalIsOpen] = useState(false);
+
+  const customStylesConfirmation = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      borderRadius: "8px",
+      padding: "60px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      zIndex: "9999",
+    },
+  };
+  const openModalSukses = () => {
+    setModalSuksesIsOpen(true);
+    setTimeout(() => {
+      closeModalSukses();
+      navigate("/promo");
+    }, 1500);
+  };
+
+  const closeModalSukses = () => {
+    setModalSuksesIsOpen(false);
+  };
+
+  const openModalGagal = () => {
+    setModalGagalIsOpen(true);
+    setTimeout(() => {
+      closeModalGagal();
+    }, 1500);
+  };
+
+  const closeModalGagal = () => {
+    setModalGagalIsOpen(false);
+  };
+
+    const [file, setFile] = useState();
     const navigate = useNavigate();
     const { response: promo, loading, error, get, put } = useApi();
     const [values, setValues] = useState ({
@@ -45,9 +90,17 @@ const EditPromo = () => {
         put(
           `https://648179fd29fa1c5c503172c3.mockapi.io/promo/${id}`,
           values
-        );
-        navigate(-1);
-    };
+        )
+        .then(() => {
+          openModalSukses();
+        })
+        .catch((error) => {
+          openModalGagal();
+          console.error(error);
+        });
+        setFile("");
+      };
+
     
     const onCancel = () => {
         navigate(-1);
@@ -196,6 +249,65 @@ const EditPromo = () => {
                     </div>
                 </div>
             )}
+            <Modal
+        isOpen={modalSuksesIsOpen}
+        onRequestClose={closeModalSukses}
+        contentLabel="Success Modal"
+        style={customStylesConfirmation}
+        id="modalSukses"
+      >
+        <div
+          id="modalSuksesContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalSuksesContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalSuksesLogo"
+              src={ModalSuksesLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalSuksesTitle" className="title-large-semibold mb-16">
+              Berhasil Disimpan
+            </h4>
+            <p id="modalSuksesMessage" className="body-small-regular mb-16">
+              Data yang anda buat sudah berhasil disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalGagalIsOpen}
+        onRequestClose={closeModalGagal}
+        contentLabel="Fail Modal"
+        style={customStylesConfirmation}
+      >
+        <div
+          id="modalGagalContainer"
+          className={`d-flex justify-content-center align-items-center`}
+        >
+          <div
+            id="modalGagalContent"
+            className={`d-flex flex-column justify-content-center align-items-center`}
+          >
+            <img
+              id="modalGagalLogo"
+              src={ModalGagalLogo}
+              alt="success"
+              className="mb-16"
+            />
+            <h4 id="modalGagalTitle" className="title-large-semibold mb-16">
+              Gagal Disimpan
+            </h4>
+            <p id="modalGagalText" className="body-small-regular mb-16">
+              Data yang anda buat Gagal disimpan
+            </p>
+          </div>
+        </div>
+      </Modal>
         </div>
     )
 }
