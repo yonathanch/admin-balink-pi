@@ -56,12 +56,12 @@ const Contact = () => {
               </Link>
             </li>
             <li className="mx-8">
-              <Link to="/" className={styles.link} smooth>
+              <Link to="/#info" className={styles.link} smooth>
                 Tentang Kami
               </Link>
             </li>
             <li className="mx-8">
-              <Link to="/" className={styles.link} smooth>
+              <Link to="/#download" className={styles.link} smooth>
                 Download
               </Link>
             </li>

@@ -41,7 +41,7 @@ const LandingPage = () => {
             </li>
             <li className="mx-8">
               <Link to='#info' className={styles.link} smooth>
-                About Us
+                Tentang Kami
               </Link>
             </li>
             <li className="mx-8">
@@ -51,7 +51,7 @@ const LandingPage = () => {
             </li>
             <li className="mx-8">
               <Link to="/contact" className={styles.link}>
-                Contact
+                Hubungi Kami
               </Link>
             </li>
           </ul>
@@ -84,9 +84,11 @@ const LandingPage = () => {
                   memberikan solusinya bagi anda{" "}
                 </p>
                 <div className="mt-48">
+                  <Link to="/login">
                   <button type="button" className={styles.buttonMain}>
-                    Mulai Aktivitas
+                    Login Untuk Admin
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>
